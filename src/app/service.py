@@ -1,7 +1,19 @@
 import logging
+from enum import StrEnum
 
 from deepface import DeepFace
 
+
+
+class ModelName(StrEnum):
+    """
+    Названия подерживаемых моделей распознавания лиц.
+
+    Attributes:
+        attribute_name: type and description.
+    """
+
+    facenet = 'Facenet'
 
 
 class FaceVerificationService:
