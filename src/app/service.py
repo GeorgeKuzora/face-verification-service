@@ -3,6 +3,7 @@ from enum import StrEnum
 
 from deepface import DeepFace
 
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 class ModelName(StrEnum):
