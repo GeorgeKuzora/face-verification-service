@@ -56,3 +56,9 @@ def test_validate_path(path: Path, request) -> None:
     path = request.getfixturevalue(path)
     service = FaceVerificationService()
     service._validate_path(path)  # noqa: WPS437
+
+
+class InvalidModel(StrEnum):
+    """Неверная модель."""
+
+    invalid_model = 'Invalid_model'
