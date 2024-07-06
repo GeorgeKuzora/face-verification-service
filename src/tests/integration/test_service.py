@@ -54,3 +54,58 @@ class InvalidModel(StrEnum):
 
 
 test_vector_min_lenght = 1
+
+
+@pytest.mark.parametrize(
+    'path, model_name, vector_min_lenght',
+    (
+        pytest.param(
+            'tmp_file_valid',
+            ModelName.facenet,
+            test_vector_min_lenght,
+            id='valid file, valid model',
+            marks=pytest.mark.slow,
+        ),
+        pytest.param(
+            'tmp_file_valid',
+            InvalidModel.invalid_model,
+            None,
+            id='valid file, invalid model name',
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+        pytest.param(
+            'tmp_file_not_found',
+            ModelName.facenet,
+            None,
+            id='file not found, valid model name',
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+        pytest.param(
+            'tmp_file_invalid_filetype',
+            ModelName.facenet,
+            None,
+            id='invalid filetype, valid model name',
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+        pytest.param(
+            'tmp_file_not_found',
+            InvalidModel.invalid_model,
+            None,
+            id='invalid path, invalid model name',
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+    ),
+)
+def test_represent(
+    path,
+    model_name,
+    vector_min_lenght,
+    request,
+):
+    """Тестирует метод FaceVerificationService.represent."""
+    path = request.getfixturevalue(path)
+    service = FaceVerificationService()
+
+    vector_lenght = len(service.represent(path, model_name))
+
+    assert vector_lenght >= vector_min_lenght
