@@ -24,3 +24,17 @@ def valid_tmp_file(tmp_path):
 def invalid_tmp_file():
     """Фикстура для получения неверного пути к файлу."""
     return Path('/invalid_tmp_file_path')
+
+
+@pytest.mark.parametrize(
+    'path, expected',
+    (
+        pytest.param('valid_tmp_file', True, id='is_valid_path'),
+        pytest.param('invalid_tmp_file', False, id='is_invalid_path'),
+    ),
+)
+def test_is_path(path, expected, request) -> None:
+    """Тестирует метод FaceVerificationService._is_path."""
+    path = request.getfixturevalue(path)
+    service = FaceVerificationService()
+    assert service._is_path(path) == expected  # noqa: WPS437
