@@ -13,9 +13,9 @@ def valid_tmp_file(tmp_path):
     """Фикстура для создания тестового файла."""
     file_id = random.randint(1, 9)
     file_name = f'temp{file_id}.txt'
-    with open(file_name, 'w'):
-        ...
     file_path = tmp_path / file_name
+    with open(file_path, 'w') as file:
+        file.write("\n")
     yield file_path
     os.remove(file_path)
 
