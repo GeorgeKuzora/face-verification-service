@@ -100,3 +100,5 @@ def test_validate_model_name(model_name):
 
 class TestRepresent:
     """Класс для тестирования метода FaceVerificationService.represent."""
+
+    mock_deepface_representation = [{'face': 123}]
