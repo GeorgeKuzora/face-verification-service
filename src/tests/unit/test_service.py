@@ -62,3 +62,20 @@ class InvalidModel(StrEnum):
     """Неверная модель."""
 
     invalid_model = 'Invalid_model'
+
+
+@pytest.mark.parametrize(
+    'model_name, expected',
+    (
+        pytest.param(ModelName.facenet, True, id='Facenet'),
+        pytest.param(
+            InvalidModel.invalid_model,
+            False,
+            id='invalid_model_name',
+        ),
+    ),
+)
+def test_is_model_name(model_name, expected, request) -> None:
+    """Тестирует метод FaceVerificationService._is_model_name."""
+    service = FaceVerificationService()
+    assert service._is_model_name(model_name) == expected  # noqa: WPS437
