@@ -18,3 +18,9 @@ def valid_tmp_file(tmp_path):
     file_path = tmp_path / file_name
     yield file_path
     os.remove(file_path)
+
+
+@pytest.fixture
+def invalid_tmp_file():
+    """Фикстура для получения неверного пути к файлу."""
+    return Path('/invalid_tmp_file_path')
