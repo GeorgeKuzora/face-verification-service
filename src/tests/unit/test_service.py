@@ -210,3 +210,20 @@ class TestRepresent:
         service = FaceVerificationService()
 
         assert service.represent(path, model_name) == expected
+
+    def test_represent_raises_on_library_error(
+        self,
+        valid_tmp_file,  # noqa: WPS442
+        mock_deep_face_represent_raises,
+    ):
+        """
+        Тестирует метод FaceVerificationService.represent.
+
+        Ожидается что метод вызовет ValueError если пропатченый
+        метод DeepFace.represent вызывает исключение ValueError.
+        """
+        service = FaceVerificationService()
+        with pytest.raises(ValueError):
+            service.represent(
+                valid_tmp_file, ModelName.facenet,
+            )
