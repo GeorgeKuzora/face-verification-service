@@ -114,3 +114,18 @@ class TestRepresent:
             'app.service.DeepFace.represent',
             lambda img_path, model_name: self.mock_deepface_representation,
         )
+
+    @pytest.fixture
+    def mock_deep_face_represent_raises(self, monkeypatch):
+        """
+        Фикстура для патча метода DeepFace.represent.
+
+        Вызывает ValueError при вызове метода.
+        """
+        def raise_value_error(img_path, model_name):  # noqa: WPS430
+            raise ValueError
+
+        monkeypatch.setattr(
+            'app.service.DeepFace.represent',
+            raise_value_error,
+        )
