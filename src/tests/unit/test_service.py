@@ -129,3 +129,19 @@ class TestRepresent:
             'app.service.DeepFace.represent',
             raise_value_error,
         )
+
+    def test_get_representation(
+        self, valid_tmp_file, mock_deep_face_represent,   # noqa: WPS442
+    ):
+        """
+        Тестирует метод FaceVerificationService._get_representation.
+
+        Ожидается что метод вернет значение возвращенное пропатченым
+        методом DeepFace.represent.
+        """
+        service = FaceVerificationService(valid_tmp_file)
+
+        file_path = str(valid_tmp_file)
+        assert service._get_representation(  # noqa: WPS437
+            file_path, ModelName.facenet,
+        ) == self.mock_deepface_representation
