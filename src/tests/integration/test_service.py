@@ -45,3 +45,9 @@ def tmp_file_invalid_filetype():
         ...
     yield file_name
     os.remove(file_name)
+
+
+class InvalidModel(StrEnum):
+    """Неверная модель пользователя."""
+
+    invalid_model = 'Invalid_model'
