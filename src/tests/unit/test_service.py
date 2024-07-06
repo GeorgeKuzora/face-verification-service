@@ -145,3 +145,22 @@ class TestRepresent:
         assert service._get_representation(  # noqa: WPS437
             file_path, ModelName.facenet,
         ) == self.mock_deepface_representation
+
+    def test_get_representation_raises(
+        self,
+        valid_tmp_file,  # noqa: WPS442
+        mock_deep_face_represent_raises,
+    ):
+        """
+        Тестирует метод FaceVerificationService._get_representation.
+
+        Ожидается что метод вызовет ValueError если пропатченый
+        метод DeepFace.represent вызывает исключение ValueError.
+        """
+        service = FaceVerificationService(valid_tmp_file)
+        file_path = str(valid_tmp_file)
+
+        with pytest.raises(expected_exception=ValueError):
+            service._get_representation(  # noqa: WPS437
+                file_path, ModelName.facenet,
+            )
