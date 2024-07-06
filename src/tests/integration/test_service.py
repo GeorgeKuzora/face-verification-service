@@ -29,3 +29,9 @@ def tmp_file_valid(tmp_path: Path):
     tmp_file = shutil.copy(test_file_path, tmp_file_path)
     yield tmp_file
     os.remove(tmp_file)
+
+
+@pytest.fixture
+def tmp_file_not_found():
+    """Фикстура для получения неверного пути к файлу."""
+    return Path('/invalid_tmp_file_path')
