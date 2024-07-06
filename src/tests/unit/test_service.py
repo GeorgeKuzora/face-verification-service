@@ -79,3 +79,20 @@ def test_is_model_name(model_name, expected, request) -> None:
     """Тестирует метод FaceVerificationService._is_model_name."""
     service = FaceVerificationService()
     assert service._is_model_name(model_name) == expected  # noqa: WPS437
+
+
+@pytest.mark.parametrize(
+    'model_name',
+    (
+        pytest.param(ModelName.facenet, id='Facenet'),
+        pytest.param(
+            InvalidModel.invalid_model,
+            id='invalid_model_name',
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+    ),
+)
+def test_validate_model_name(model_name):
+    """Тестирует метод FaceVerificationService._validate_model_name."""
+    service = FaceVerificationService()
+    service._validate_model_name(model_name)  # noqa: WPS437
