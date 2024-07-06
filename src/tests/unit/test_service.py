@@ -164,3 +164,49 @@ class TestRepresent:
             service._get_representation(  # noqa: WPS437
                 file_path, ModelName.facenet,
             )
+
+    @pytest.mark.parametrize(
+        'path, model_name, expected',
+        (
+            pytest.param(
+                'valid_tmp_file',
+                ModelName.facenet,
+                mock_deepface_representation,
+                id='valid path, valid model',
+            ),
+            pytest.param(
+                'valid_tmp_file',
+                InvalidModel.invalid_model,
+                None,
+                id='valid path, invalid model name',
+                marks=pytest.mark.xfail(raises=ValueError),
+            ),
+            pytest.param(
+                'invalid_tmp_file',
+                ModelName.facenet,
+                None,
+                id='invalid path, valid model name',
+                marks=pytest.mark.xfail(raises=ValueError),
+            ),
+            pytest.param(
+                'invalid_tmp_file',
+                InvalidModel.invalid_model,
+                None,
+                id='invalid path, invalid model name',
+                marks=pytest.mark.xfail(raises=ValueError),
+            ),
+        ),
+    )
+    def test_represent(  # noqa: WPS211
+        self,
+        path,
+        model_name,
+        expected,
+        mock_deep_face_represent,
+        request,
+    ):
+        """Тестирует метод FaceVerificationService.represent."""
+        path = request.getfixturevalue(path)
+        service = FaceVerificationService()
+
+        assert service.represent(path, model_name) == expected
