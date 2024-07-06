@@ -7,3 +7,5 @@ from pathlib import Path
 import pytest
 
 from app.service import FaceVerificationService, ModelName
+
+logger = logging.getLogger(__name__)
