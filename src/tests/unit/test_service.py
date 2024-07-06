@@ -102,3 +102,15 @@ class TestRepresent:
     """Класс для тестирования метода FaceVerificationService.represent."""
 
     mock_deepface_representation = [{'face': 123}]
+
+    @pytest.fixture
+    def mock_deep_face_represent(self, monkeypatch):
+        """
+        Фикстура для патча метода DeepFace.represent.
+
+        Заменяет возвращаемое значение метода.
+        """
+        monkeypatch.setattr(
+            'app.service.DeepFace.represent',
+            lambda img_path, model_name: self.mock_deepface_representation,
+        )
