@@ -96,3 +96,7 @@ def test_validate_model_name(model_name):
     """Тестирует метод FaceVerificationService._validate_model_name."""
     service = FaceVerificationService()
     service._validate_model_name(model_name)  # noqa: WPS437
+
+
+class TestRepresent:
+    """Класс для тестирования метода FaceVerificationService.represent."""
