@@ -35,3 +35,13 @@ def tmp_file_valid(tmp_path: Path):
 def tmp_file_not_found():
     """Фикстура для получения неверного пути к файлу."""
     return Path('/invalid_tmp_file_path')
+
+
+@pytest.fixture
+def tmp_file_invalid_filetype():
+    """Фикстура для создания файла неверного типа."""
+    file_name = 'temp.txt'
+    with open(file_name, 'w'):
+        ...
+    yield file_name
+    os.remove(file_name)
