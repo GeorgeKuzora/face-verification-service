@@ -51,3 +51,6 @@ class InvalidModel(StrEnum):
     """Неверная модель пользователя."""
 
     invalid_model = 'Invalid_model'
+
+
+test_vector_min_lenght = 1
