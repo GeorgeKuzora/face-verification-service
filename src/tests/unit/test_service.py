@@ -38,3 +38,21 @@ def test_is_path(path, expected, request) -> None:
     path = request.getfixturevalue(path)
     service = FaceVerificationService()
     assert service._is_path(path) == expected  # noqa: WPS437
+
+
+@pytest.mark.parametrize(
+    'path',
+    (
+        pytest.param('valid_tmp_file', id='is_valid_path'),
+        pytest.param(
+            'invalid_tmp_file',
+            id='is_invalid_path',
+            marks=pytest.mark.xfail(raises=ValueError),
+        ),
+    ),
+)
+def test_validate_path(path: Path, request) -> None:
+    """Тестирует метод FaceVerificationService._validate_path."""
+    path = request.getfixturevalue(path)
+    service = FaceVerificationService()
+    service._validate_path(path)  # noqa: WPS437
