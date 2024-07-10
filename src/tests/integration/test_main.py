@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Any
 from app.service import FaceVerificationService
+from app.main import main
 import pytest
 
 
@@ -25,3 +26,7 @@ def representation(test_data_dir: str) -> list[dict[str, Any]]:
 def test_representation_is_not_empty(representation: list[dict[str, Any]]) -> None:
     assert representation is not None
     assert len(representation) > 0
+
+
+def test_main_without_error():
+    main()
