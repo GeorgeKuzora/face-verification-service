@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from app.service import FaceVerificationService, ModelName
+from app.core.face_verification import FaceVerificationService, ModelName
 
 
 @pytest.fixture
@@ -111,7 +111,7 @@ class TestRepresent:
         Заменяет возвращаемое значение метода.
         """
         monkeypatch.setattr(
-            'app.service.DeepFace.represent',
+            'app.core.face_verification.DeepFace.represent',
             lambda img_path, model_name: self.mock_deepface_representation,
         )
 
@@ -126,7 +126,7 @@ class TestRepresent:
             raise ValueError
 
         monkeypatch.setattr(
-            'app.service.DeepFace.represent',
+            'app.core.face_verification.DeepFace.represent',
             raise_value_error,
         )
 
