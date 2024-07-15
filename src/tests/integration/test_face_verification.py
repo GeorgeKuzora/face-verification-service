@@ -41,8 +41,8 @@ def tmp_file_not_found():
 def tmp_file_invalid_filetype():
     """Фикстура для создания файла неверного типа."""
     file_name = 'temp.txt'
-    with open(file_name, 'w'):
-        ...
+    with open(file_name, 'w') as invalid_type_file:
+        invalid_type_file.write('\n')
     yield file_name
     os.remove(file_name)
 

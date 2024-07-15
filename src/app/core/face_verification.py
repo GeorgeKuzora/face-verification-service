@@ -29,12 +29,12 @@ class FaceVerificationService:
         verificator: Библиотека распознавания лица. По умолчанию DeepFace
     """
 
-    def __init__(self, library: object = DeepFace) -> None:
+    def __init__(self, library: type = DeepFace) -> None:
         """
         Функция инициализации.
 
-        Args:
-            library: Библиотека для распознавания лиц.
+        :param library: Библиотека для распознавания лиц, defaults to DeepFace.
+        :type library: type
         """
         self.library = library
 
@@ -46,17 +46,12 @@ class FaceVerificationService:
 
         Возвращает список вложенных векторов.
 
-        Args:
-            img_path: str | pathlib.Path, путь к файлу изображения
-            model_name: ModelName, название модели анализа изображения
-
-        Returns:
-            list[dict[str, Any]]: Список вложенных векторов
-
-        Raises:
-            ValueError: Возвращает ошибку значения при передаче
-              невалидных значений пути, имени модели или ошибке
-              в библиотеке анализа изображений
+        :param img_path: путь к файлу изображения
+        :type img_path: str | pathlib.Path
+        :param model_name: ModelName, название модели анализа изображения
+        :type model_name: str
+        :return: Список вложенных векторов
+        :rtype: list[dict[str, Any]]
         """
         self._validate_path(img_path)
         self._validate_model_name(model_name)
