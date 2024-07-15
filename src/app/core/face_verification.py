@@ -3,7 +3,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
-from deepface import DeepFace  # type: ignore
+from deepface import DeepFace
 
 logger: logging.Logger = logging.getLogger(__name__)
 
