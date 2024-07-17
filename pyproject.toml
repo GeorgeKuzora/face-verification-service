@@ -8,13 +8,14 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 deepface = "0.0.92"
-tf-keras = "*"
+tf-keras = "2.16.0"
 
 [tool.poetry.group.dev.dependencies]
 wemake-python-styleguide = "^0.19.2"
 pytest = "^8.2.2"
 mypy = "^1.10.1"
 coverage = "*"
+coverage-conditional-plugin = "*"
 pytest-cov = "*"
 
 [build-system]

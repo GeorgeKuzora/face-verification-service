@@ -17,56 +17,54 @@
 `InMemoryRepository` - имплементация интерфейса Repository. Служит для сохранения данных в локальные структуры Python во время работы программы. Для хранения данных используются списки.
 
 
-## Внесение изменений внутри Devcontainer
+## Особенности
 
-Перед использованием devcontainer-ов необходимо установить:
-- Для Windows: рекомендуется использовать [WSL](https://virgo.ftc.ru/pages/viewpage.action?pageId=1084887269)
-- Docker Desktop для MacOS/Windows или просто docker для Linux
-- Visual Studio Code c плагинами
-  - `ms-vscode-remote.remote-containers`
-  - `ms-azuretools.vscode-docker`
-- Git
-- OpenSSH с SSH Agent
-- OpenSSL
-- [Шрифты для powerlevel10k](https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#fonts)
+- Для верификации лица сервис использует библиотеку [DeepFace](https://pypi.org/project/deepface/).
+- Для доступа к функциям сервиса используется API на базе HTTP запросов.
+- Для хранения данных сервис использует базу данных [PostgreSQL](https://www.postgresql.org/).
+- Для кэширования данных используется [Redis](https://redis.io/)
 
-Если какие-то из дальнейших пунктов у вас уже выполнены, смело пропускайте шаг.
+## Используемые инструменты и технологии
 
-После установки необходимого ПО:
-- Сгенерируйте SSH ключ и добавьте его в свой MosHub аккаунт
-- Настройте `user.name` и `user.email` для Git
-- [Настройте SSH Agent c вашим ключом](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)
-- Склонируйте текущий репозиторий в локальную директорию, если еще не сделали этого
+- Python 3.12
+- Fast API
+- Pydantic
+- DeepFace
+- Linux
+- Docker
+- PostgreSQL
+- Redis
+- Kubernetes
 
-Для настройки kubernetes (потребуется во второй половине курса):
-- Сгенерируйте ключи для kubectl и положите их в папку `~/.kube`
-- Настройте kubectl на использование ключей из папки `~/.kube`
+## Локальная разработка и тестирование проекта
 
-После настройки локального окружения:
-- Откройте директорию в Visual Studio Code
-- Нажмите `Ctrl+Shift+P` или `Cmd+Shift+P`
-- Введите `Dev Containers:`
-- Выберите из предложенных вариантов пункт `Dev Containers: Rebuild and Reopen in Container`
-- Дождитесь открытия проекта внутри окружения в Devcontainer
+Проект разрабатывается в devcontainer. Информацию о том, как запустить проект и работать над ним, можно найти в файле [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+## Линтер
 
-### Окружение доступное после старта Devcontainer
-- Преднастроенная конфигурация для запуска линтера
+### Используемые утилиты
 
-  Доступ из командной панели:
-  - Нажмите `Ctrl+Shift+P` или `Cmd+Shift+P`
-  - Выберете `Tasks: Run Task`
-  - Выберете `Flake8` или `ISort`
+В проекте предусмотренно использование линтеров и статических анализаторов кода.
 
-- Преднастроенная конфигурация для запуска тестов
+В проекте используются следующие линтеры и статические анализаторы кода:
 
-  Смотрите по кнопке `Testing` в левой панели Visual Studio Code.
+- **wemake-python-styleguide** - линтер
+- **MyPy** - статический анализатор кода
 
-- Преднастроенная конфигурация для запуска сервиса
+### Работа с линтером
 
-  Смотрите по кнопке `Run and Debug` в левой панели Visual Studio Code.
-- `Zsh` с Oh-My-Zsh в качестве shell по-умолчанию
-- базовые консольные инструменты вроде `git`, `curl` и прочие
-- `kubectl` и `helm` для работы с kubernetes
-- `python` версии 3.12 с `poetry` для управления зависимостями и виртуальным окружением
-- настроен доступ до `docker` на хосте
+Для запуска линтера установите все зависимости и создайте виртуальное окружение проекта, как это описано в файле [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+Затем выполните следующие команды в корне проекта:
+
+Для запуска линтера **wemake-python-styleguide**:
+
+```shell
+poetry run flake8 --jobs=1 src
+```
+
+Для запуска статического анализатора кода **MyPy**:
+
+```shell
+poetry run mypy src/app
+```
