@@ -1,5 +1,5 @@
 {
-    "name": "Face Verification",
+    "name": "face-verification-kuzora",
     "dockerComposeFile": "docker-compose.yml",
     "service": "app",
     "workspaceFolder": "/workspace",
@@ -32,6 +32,7 @@
                 "redhat.vscode-yaml",
                 "tamasfe.even-better-toml",
                 "njqdev.vscode-python-typehint",
+                "ms-python.flake8",
                 "vscode-icons-team.vscode-icons"
             ]
         }
