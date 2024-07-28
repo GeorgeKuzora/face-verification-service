@@ -56,6 +56,20 @@ class InvalidModel(StrEnum):
 test_vector_min_lenght = 1
 
 
+@pytest.fixture
+def service(storage):
+    """
+    Объект сервиса.
+
+    :param storage: Хранилище данных
+    :type storage: Storage
+    :return: Экземляр сервиса
+    :rtype: FaceVerificationService
+    """
+    return FaceVerificationService(storage=storage)
+
+
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     'path, model_name, vector_min_lenght',
     (
@@ -96,16 +110,17 @@ test_vector_min_lenght = 1
         ),
     ),
 )
-def test_represent(
+async def test_represent(
     path,
     model_name,
     vector_min_lenght,
     request,
+    service,
 ):
     """Тестирует метод FaceVerificationService.represent."""
     path = request.getfixturevalue(path)
-    service = FaceVerificationService()
 
-    vector_lenght = len(service.represent(path, model_name))
+    vector = await service.represent(path, model_name)
+    vector_lenght = len(vector)
 
     assert vector_lenght >= vector_min_lenght

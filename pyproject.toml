@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "face_recognition_service"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Georgiy Kuzora <georgiy@kuzora.ru>"]
 readme = "README.md"
@@ -9,6 +9,9 @@ readme = "README.md"
 python = "^3.12"
 deepface = "0.0.92"
 tf-keras = "2.16.0"
+fastapi = "0.111.1"
+pydantic-settings = "2.3.4"
+pyyaml = "6.0.1"
 
 [tool.poetry.group.dev.dependencies]
 wemake-python-styleguide = "^0.19.2"
@@ -17,6 +20,9 @@ mypy = "^1.10.1"
 coverage = "*"
 coverage-conditional-plugin = "*"
 pytest-cov = "*"
+pytest-asyncio = "*"
+anyio = { version = "^4.4.0", extras = ["trio"] }
+
 
 [build-system]
 requires = ["poetry-core"]
