@@ -8,8 +8,9 @@ from app.core.face_verification import FaceVerificationService
 from app.core.models import Message
 from app.external.in_memory_storage import InMemoryStorage
 from app.external.kafka import Kafka
-from app.service import app
+from fastapi import APIRouter
 
+router = APIRouter()
 
 async def run_in_executor(executor: Executor, func: Callable[[], Any]) -> Any:
     """
@@ -51,7 +52,7 @@ async def update_user(
     )
 
 
-@app.get('/')
+@router.get('/')
 async def root_handler() -> dict[str, str]:
     """
     Возращает сообщение что сервер работает.
@@ -83,7 +84,7 @@ def get_kafka():
     return Kafka()
 
 
-@app.get('/kafka')
+@router.post('/kafka')
 async def verify(
     service: Annotated[FaceVerificationService, Depends(get_service)],
     kafka: Annotated[Kafka, Depends(get_kafka)],
