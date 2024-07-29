@@ -2,15 +2,15 @@ import asyncio
 from concurrent.futures import Executor, ProcessPoolExecutor
 from typing import Annotated, Any, Callable
 
-from fastapi import Depends
+from fastapi import APIRouter, Depends
 
 from app.core.face_verification import FaceVerificationService
 from app.core.models import Message
 from app.external.in_memory_storage import InMemoryStorage
 from app.external.kafka import Kafka
-from fastapi import APIRouter
 
 router = APIRouter()
+
 
 async def run_in_executor(executor: Executor, func: Callable[[], Any]) -> Any:
     """
