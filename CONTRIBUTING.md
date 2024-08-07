@@ -98,3 +98,27 @@
 `test_data/` — каталог с тестовыми данными проекта.
 `test_face_verification.py` — файл с тестом алгоритма распознавания лиц.
 `test_service.py` — файл с тестом сервиса проекта.
+`Dockerfile` — файл для создания образа Docker контейнера.
+`.dockerignore` — файл для игнорирования файлов и директорий в ходе сборки Docker контейнера.
+
+## Запуск приложения в Docker контейнере
+
+Для приложения создан [Dockerfile](./Dockerfile).
+
+Для запуска приложения в Docker контейнере необходимо:
+
+Установить Docker Desktop для MacOS/Windows или просто docker для Linux. [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+Выполнить команду `docker build` для сборки образа контейнера:
+
+```shell
+docker build -t face-verification:latest .
+```
+
+Для создания и запуска контейнера выполните команду `docker run`:
+
+```shell
+docker run --name face-verification -p 127.0.0.1:8081:8000 face-verification
+```
+
+Приложение будет доступно на порту `127.0.0.1:8081`.
