@@ -12,6 +12,8 @@ tf-keras = "2.16.0"
 fastapi = "0.111.1"
 pydantic-settings = "2.3.4"
 pyyaml = "6.0.1"
+aiokafka = "0.11.0"
+brotli = "1.1.0"
 
 [tool.poetry.group.dev.dependencies]
 wemake-python-styleguide = "^0.19.2"
