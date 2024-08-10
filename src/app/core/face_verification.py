@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from enum import StrEnum
 from pathlib import Path
@@ -103,6 +104,34 @@ class FaceVerificationService:
         self.library = library
         self.validator = Validator()
 
+    async def verify(self, username: str, img_path: str) -> None:
+        """
+        Верифицирует пользователя.
+
+        Получает вектор изображения пользователя.
+        Верифицирует пользователя.
+        Удаляет использованное изображение пользователя.
+
+        :param username: Имя пользователя
+        :type username: str
+        :param img_path: Путь к изображению пользователя
+        :type img_path: str
+        """
+        try:
+            vector = await self.represent(img_path)
+        except ValueError:
+            logger.error(f"can't get vector for {username}")
+            return
+        logger.info(f'got vector {vector} for {username}')
+        delete_task = asyncio.create_task(self._delete_path(img_path))
+        update_user_task = asyncio.create_task(
+            self.update_user(vector, username),
+        )
+        try:
+            asyncio.gather(delete_task, update_user_task)
+        except Exception:
+            logger.error(f"can't update {username}")
+
     async def represent(
         self, img_path: str | Path, model_name: str = ModelName.facenet,
     ) -> list[dict[str, Any]]:
@@ -138,7 +167,7 @@ class FaceVerificationService:
         user: User | None = self.storage.update_user(vector, username)
         if not user:
             logger.error('StorageError: user is not updated')
-            raise StorageError('error in stotage user is not updated')
+            raise StorageError(detail='error in stotage user is not updated')
 
     def _get_representation(
         self, img: str, model_name: str,
@@ -157,3 +186,12 @@ class FaceVerificationService:
                 'unexpected exception in a face verification library',
             ) from err
         return embedding_objs
+
+    async def _delete_path(self, img_path: str) -> None:
+        path = Path(img_path)
+        try:
+            self.validator.validate_path(img_path)
+        except ValueError:
+            logger.warning(f'{img_path} not found, can not remove')
+        else:
+            path.unlink()
