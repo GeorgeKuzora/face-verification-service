@@ -16,9 +16,7 @@ class AsyncMultiProccessRunner:
         :type kwargs: key-value pairs
         """
         with ProcessPoolExecutor() as pool:
-            asyncio.run(
-                self._run(pool, func, **kwargs),
-            )
+            await self._run(pool, func, **kwargs)
 
     async def _run(
         self, executor: Executor, func: Callable, **kwargs,
