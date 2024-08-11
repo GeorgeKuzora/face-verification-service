@@ -98,6 +98,11 @@ class Validator:
             return model_name in model_name_values
         return model_name.value in model_name_values
 
+def represent(img_path: str) -> list[dict[str, Any]]:
+    return DeepFace.represent(
+        img_path=img_path,
+        model_name='Facenet',
+    )
 
 class FaceVerificationService:
     """
@@ -138,7 +143,7 @@ class FaceVerificationService:
         :type img_path: str
         """
         try:
-            vector = await self.runner.run(self.represent, img_path)
+            vector = await self.runner.run(represent, img_path)
         except ValueError:
             logger.error(f"can't get vector for {username}")
             task = asyncio.create_task(self._delete_path(img_path))
