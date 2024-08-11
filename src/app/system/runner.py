@@ -10,7 +10,7 @@ class AsyncMultiProccessRunner:
         """
         Метод запуска функции.
 
-        :param func: Запускаемая функция
+        :param func: Запускаемая асинхронная функция
         :type func: Callable
         :param kwargs: Атрибуты функциив форме ключ-значение
         :type kwargs: key-value pairs
@@ -21,8 +21,11 @@ class AsyncMultiProccessRunner:
     async def _run(
         self, executor: Executor, func: Callable, **kwargs,
     ) -> None:
+        async def function_runner():  # noqa: WPS430 need for run_in_executor
+            await func(**kwargs)
+
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(
             executor,
-            lambda: func(**kwargs),
+            function_runner,
         )
