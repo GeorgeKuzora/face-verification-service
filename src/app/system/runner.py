@@ -28,16 +28,3 @@ class AsyncMultiProccessRunner:
                 lambda: func(**kwargs),
             ),
         )
-
-class SimpleAsyncRunner:
-
-    async def run(self, func: Callable, **kwargs) -> Any:
-        """
-        Метод запуска функции.
-
-        :param func: Запускаемая функция
-        :type func: Callable
-        :param kwargs: Атрибуты функциив форме ключ-значение
-        :type kwargs: key-value pairs
-        """
-        await func(**kwargs)
