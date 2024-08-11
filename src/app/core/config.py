@@ -31,8 +31,6 @@ class KafkaSettings(BaseSettings):
         :rtype: str
         :raises ConfigError: При ошибке конфигурации сервиса
         """
-        if not self.host or self.port:
-            raise ConfigError(detail='kafka config setting failed')
         return f'{self.host}:{self.port}'
 
 
