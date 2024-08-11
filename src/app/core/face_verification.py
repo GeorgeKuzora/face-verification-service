@@ -121,6 +121,8 @@ class FaceVerificationService:
             vector = await self.represent(img_path)
         except ValueError:
             logger.error(f"can't get vector for {username}")
+            task = asyncio.create_task(self._delete_path(img_path))
+            await task
             return
         logger.info(f'got vector {vector} for {username}')
         delete_task = asyncio.create_task(self._delete_path(img_path))
