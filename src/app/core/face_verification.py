@@ -15,14 +15,14 @@ logger: logging.Logger = logging.getLogger(__name__)
 class Runner(Protocol):
     """Класс запуска фукций в различных режимах."""
 
-    async def run(self, func: Callable, img_path: str) -> Any:
+    async def run(self, func: Callable, **kwargs) -> Any:
         """
         Метод запуска функции.
 
         :param func: Запускаемая функция
         :type func: Callable
-        :param args: Атрибуты функциив форме ключ-значение
-        :type args: key-value pairs
+        :param kwargs: Атрибуты функциив форме ключ-значение
+        :type kwargs: key-value pairs
         """
         ...  # noqa: WPS428 default Protocol syntax
 
@@ -98,11 +98,13 @@ class Validator:
             return model_name in model_name_values
         return model_name.value in model_name_values
 
-def represent(img_path: str) -> list[dict[str, Any]]:
+
+def _represent(img_path: str, model_name: str) -> list[dict[str, Any]]:
     return DeepFace.represent(
         img_path=img_path,
-        model_name='Facenet',
+        model_name=model_name,
     )
+
 
 class FaceVerificationService:
     """
@@ -143,7 +145,7 @@ class FaceVerificationService:
         :type img_path: str
         """
         try:
-            vector = await self.runner.run(represent, img_path)
+            vector = await self.represent(img_path=img_path)
         except ValueError:
             logger.error(f"can't get vector for {username}")
             task = asyncio.create_task(self._delete_path(img_path))
@@ -159,7 +161,7 @@ class FaceVerificationService:
         except Exception:
             logger.error(f"can't update {username}")
 
-    def represent(
+    async def represent(
         self, img_path: str | Path, model_name: str = ModelName.facenet,
     ) -> list[dict[str, Any]]:
         """
@@ -177,7 +179,9 @@ class FaceVerificationService:
         self.validator.validate_path(img_path)
         self.validator.validate_model_name(model_name)
         img_path = str(img_path)
-        return self._get_representation(img_path, model_name)
+        return await self.runner.run(
+            _represent, img_path=img_path, model_name=model_name,
+        )
 
     async def update_user(
         self, vector: list[dict[str, Any]], username: str,
@@ -195,24 +199,6 @@ class FaceVerificationService:
         if not user:
             logger.error('StorageError: user is not updated')
             raise StorageError(detail='error in stotage user is not updated')
-
-    def _get_representation(
-        self, img: str, model_name: str,
-    ) -> list[dict[str, Any]]:
-        try:
-            embedding_objs: list[dict[str, Any]] = DeepFace.represent(
-                img_path=img,
-                model_name=model_name,
-            )
-        except ValueError as err:
-            logger.error(
-                'unexpected exception in a face verification library',
-                exc_info=True,
-            )
-            raise ValueError(
-                'unexpected exception in a face verification library',
-            ) from err
-        return embedding_objs
 
     async def _delete_path(self, img_path: str) -> None:
         path = Path(img_path)
