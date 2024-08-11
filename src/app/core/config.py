@@ -20,7 +20,7 @@ class KafkaSettings(BaseSettings):
     file_encoding: str = 'utf-8'
     file_compression_quality: int = 1
     storage_path: str
-    topics = str
+    topics: str
 
     @property
     def instance(self) -> str:
@@ -29,7 +29,6 @@ class KafkaSettings(BaseSettings):
 
         :return: Адрес kafka
         :rtype: str
-        :raises ConfigError: При ошибке конфигурации сервиса
         """
         return f'{self.host}:{self.port}'
 
