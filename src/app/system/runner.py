@@ -22,9 +22,7 @@ class AsyncMultiProccessRunner:
         self, executor: Executor, func: Callable, **kwargs,
     ) -> None:
         loop = asyncio.get_event_loop()
-        await asyncio.gather(
-            loop.run_in_executor(
-                executor,
-                lambda: func(**kwargs),
-            ),
+        await loop.run_in_executor(
+            executor,
+            lambda: func(**kwargs),
         )
