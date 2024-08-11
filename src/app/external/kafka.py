@@ -14,10 +14,9 @@ logger = logging.getLogger(__name__)
 class KafkaConsumer:
     """Очередь сообщений кафка."""
 
-    def __init__(self, service: FaceVerificationService, runner) -> None:
+    def __init__(self, service: FaceVerificationService) -> None:
         """Метод инициализации."""
         self.service = service
-        self.runner = runner
 
         self.consumer = AIOKafkaConsumer(
             get_settings().kafka.topics,
