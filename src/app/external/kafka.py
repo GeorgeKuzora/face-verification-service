@@ -38,7 +38,7 @@ class KafkaConsumer:
         self.consumer = AIOKafkaConsumer(
             get_settings().kafka.topics,
             bootstrap_servers=get_settings().kafka.host,
-            value_deserializer=self._deserializer,
+            value_deserializer=self.deserializer,
         )
 
         self._init_storage_path()
@@ -62,7 +62,7 @@ class KafkaConsumer:
         """Останавливает consumer."""
         await self.consumer.stop()
 
-    async def _deserializer(self, serialized: bytes) -> dict[str, str]:
+    def deserializer(self, serialized: bytes) -> dict[str, str]:
         """
         Десериализирует сообщение после получения в kafra.
 
