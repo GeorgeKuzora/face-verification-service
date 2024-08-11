@@ -2,7 +2,7 @@ import asyncio
 import logging
 from enum import StrEnum
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Protocol, Callable
 
 from deepface import DeepFace
 
@@ -10,6 +10,21 @@ from app.core.errors import StorageError
 from app.core.models import User
 
 logger: logging.Logger = logging.getLogger(__name__)
+
+
+class Runner(Protocol):
+    """Класс запуска фукций в различных режимах."""
+
+    async def run(self, func: Callable, img_path: str) -> Any:
+        """
+        Метод запуска функции.
+
+        :param func: Запускаемая функция
+        :type func: Callable
+        :param args: Атрибуты функциив форме ключ-значение
+        :type args: key-value pairs
+        """
+        ...  # noqa: WPS428 default Protocol syntax
 
 
 class Storage(Protocol):
@@ -91,18 +106,23 @@ class FaceVerificationService:
     Служит для вызова функций библиотеки распознавания лица DeepFace.
     """
 
-    def __init__(self, storage: Storage, library: type = DeepFace) -> None:
+    def __init__(
+        self, storage: Storage, runner: Runner, library: type = DeepFace,
+    ) -> None:
         """
         Функция инициализации.
 
         :param storage: Хранилище данных
         :type storage: Storage
+        :param runner: Обработчик функции
+        :type runner: Runner
         :param library: Библиотека для распознавания лиц, defaults to DeepFace.
         :type library: type
         """
         self.storage = storage
         self.library = library
         self.validator = Validator()
+        self.runner = runner
 
     async def verify(self, username: str, img_path: str) -> None:
         """
@@ -118,7 +138,7 @@ class FaceVerificationService:
         :type img_path: str
         """
         try:
-            vector = await self.represent(img_path)
+            vector = await self.runner.run(self.represent, img_path)
         except ValueError:
             logger.error(f"can't get vector for {username}")
             task = asyncio.create_task(self._delete_path(img_path))
@@ -134,7 +154,7 @@ class FaceVerificationService:
         except Exception:
             logger.error(f"can't update {username}")
 
-    async def represent(
+    def represent(
         self, img_path: str | Path, model_name: str = ModelName.facenet,
     ) -> list[dict[str, Any]]:
         """

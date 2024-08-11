@@ -1,4 +1,5 @@
 import asyncio
+from functools import partial
 from concurrent.futures import Executor, ProcessPoolExecutor
 from typing import Any, Callable
 
@@ -6,26 +7,25 @@ from typing import Any, Callable
 class AsyncMultiProccessRunner:
     """Раннер для запуска а асинхронной функции в новом процессе."""
 
-    async def run(self, func: Callable, **kwargs) -> Any:
+    async def run(self, func: Callable, img_path: str) -> Any:
         """
         Метод запуска функции.
 
-        :param func: Запускаемая асинхронная функция
+        :param func: Запускаемая синхронная функция
         :type func: Callable
-        :param kwargs: Атрибуты функциив форме ключ-значение
-        :type kwargs: key-value pairs
+        :param args: Атрибуты функции
+        :type args: key-value pairs
+        :return: Результат выполнения
         """
         with ProcessPoolExecutor() as pool:
-            await self._run(pool, func, **kwargs)
+            return await self._run(pool, func, img_path)
 
     async def _run(
-        self, executor: Executor, func: Callable, **kwargs,
+        self, executor: Executor, func: Callable, img_path,
     ) -> None:
-        async def function_runner():  # noqa: WPS430 need for run_in_executor
-            await func(**kwargs)
-
+        represent_image_on_path = partial(func, img_path=img_path)
         loop = asyncio.get_event_loop()
-        await loop.run_in_executor(
+        return await loop.run_in_executor(
             executor,
-            function_runner,
+            represent_image_on_path,
         )

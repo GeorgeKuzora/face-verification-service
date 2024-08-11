@@ -16,11 +16,11 @@ def _init_kafka() -> KafkaConsumer:
     logger.info('Starting up storage...')
     storage = InMemoryStorage()
     logger.info('Starting up service...')
-    service = FaceVerificationService(storage=storage)
-    logger.info('Starting up runner...')
     runner = AsyncMultiProccessRunner()
     logger.info('Starting up kafka consumer...')
-    return KafkaConsumer(service=service, runner=runner)
+    service = FaceVerificationService(storage=storage, runner=runner)
+    logger.info('Starting up runner...')
+    return KafkaConsumer(service=service)
 
 
 @asynccontextmanager

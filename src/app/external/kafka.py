@@ -2,7 +2,6 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Protocol
 
 from aiokafka import AIOKafkaConsumer
 
@@ -10,21 +9,6 @@ from app.core.config import get_settings
 from app.core.face_verification import FaceVerificationService
 
 logger = logging.getLogger(__name__)
-
-
-class Runner(Protocol):
-    """Класс запуска фукций в различных режимах."""
-
-    async def run(self, func: Callable, **kwargs) -> Any:
-        """
-        Метод запуска функции.
-
-        :param func: Запускаемая функция
-        :type func: Callable
-        :param kwargs: Атрибуты функциив форме ключ-значение
-        :type kwargs: key-value pairs
-        """
-        ...  # noqa: WPS428 default Protocol syntax
 
 
 class KafkaConsumer:
@@ -50,9 +34,7 @@ class KafkaConsumer:
                 message: dict[str, str] = msg.value  # type: ignore
                 username = message.get('username', '')
                 img_path = message.get('file_path', '')
-                await self.runner.run(
-                    self.service.verify, username=username, img_path=img_path,
-                )
+                await self.service.verify(username=username, img_path=img_path)
 
     async def start(self) -> None:
         """Запускает consumer."""
