@@ -37,7 +37,7 @@ class KafkaConsumer:
 
         self.consumer = AIOKafkaConsumer(
             get_settings().kafka.topics,
-            bootstrap_servers=get_settings().kafka.instance,
+            bootstrap_servers=get_settings().kafka.host,
             value_deserializer=self._deserializer,
         )
 
