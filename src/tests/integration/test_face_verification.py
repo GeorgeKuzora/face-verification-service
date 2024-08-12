@@ -28,7 +28,10 @@ def tmp_file_valid(tmp_path: Path):
 
     tmp_file = shutil.copy(test_file_path, tmp_file_path)
     yield tmp_file
-    os.remove(tmp_file)
+    try:
+        os.remove(tmp_file)
+    except Exception:
+        logger.info("can't remove file")
 
 
 @pytest.fixture
@@ -44,7 +47,10 @@ def tmp_file_invalid_filetype():
     with open(file_name, 'w') as invalid_type_file:
         invalid_type_file.write('\n')
     yield file_name
-    os.remove(file_name)
+    try:
+        os.remove(file_name)
+    except Exception:
+        logger.info("can't remove file")
 
 
 class InvalidModel(StrEnum):
@@ -126,3 +132,57 @@ async def test_represent(
     vector_lenght = len(vector)
 
     assert vector_lenght >= vector_min_lenght
+
+
+class TestVerify:
+    """Тестирует метод verify."""
+
+    yes = True
+    nope = False
+    words_in_vector_log = [
+        'embedding', 'facial_area', 'left_eye', 'right_eye', 'face_confidence',
+    ]
+
+    @pytest.mark.asyncio
+    @pytest.mark.anyio
+    @pytest.mark.parametrize(
+        'path, got_vector',
+        (
+            pytest.param(
+                'tmp_file_valid',
+                yes,
+                id='valid file, valid model',
+                marks=pytest.mark.slow,
+            ),
+            pytest.param(
+                'tmp_file_not_found',
+                nope,
+                id='file not found, valid model name',
+            ),
+            pytest.param(
+                'tmp_file_invalid_filetype',
+                nope,
+                id='invalid filetype, valid model name',
+            ),
+        ),
+    )
+    async def test_verify(  # noqa: WPS211 need for setting test states
+        self,
+        path,
+        got_vector,
+        request,
+        service,
+        caplog,
+    ):
+        """Тестирует метод verify."""
+        caplog.set_level(logging.INFO)
+        path = request.getfixturevalue(path)
+
+        await service.verify('george', path)
+
+        if got_vector:
+            for word in self.words_in_vector_log:
+                assert word in caplog.text
+        elif not got_vector:
+            for wrd in self.words_in_vector_log:
+                assert wrd not in caplog.text
