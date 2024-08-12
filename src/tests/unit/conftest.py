@@ -1,7 +1,7 @@
 import os
 import random
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -46,7 +46,8 @@ def service():
     :rtype: AuthService
     """
     storage = MagicMock()
-    return FaceVerificationService(storage=storage)
+    runner = AsyncMock()
+    return FaceVerificationService(storage=storage, runner=runner)
 
 
 @pytest.fixture

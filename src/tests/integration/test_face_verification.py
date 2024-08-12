@@ -57,16 +57,18 @@ test_vector_min_lenght = 1
 
 
 @pytest.fixture
-def service(storage):
+def service(storage, runner):
     """
     Объект сервиса.
 
     :param storage: Хранилище данных
     :type storage: Storage
+    :param runner: Раннер функции
+    :type runner: Runner
     :return: Экземляр сервиса
     :rtype: FaceVerificationService
     """
-    return FaceVerificationService(storage=storage)
+    return FaceVerificationService(storage=storage, runner=runner)
 
 
 @pytest.mark.asyncio
