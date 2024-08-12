@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from unittest.mock import AsyncMock
 
 import pytest
 import pytest_asyncio
@@ -44,10 +45,28 @@ class TestInitStaragePath:
         finally:
             path.rmdir()
 
+    @pytest.fixture
+    def path_is_forbidden(self):
+        """Фикстура для получения и очистки занятого пути."""
+        path = Path(get_settings().kafka.storage_path)
+        path.rmdir()
+        path.touch()
+        try:  # noqa: WPS501 need for cleaning after test
+            yield path
+        finally:
+            path.unlink()
+
     def test_init_storage_path(self, consumer: KafkaConsumer, path: Path):
         """Тестирует что директория была создана."""
         consumer._init_storage_path()
         assert path.is_dir()
+
+    def test_init_storage_path_raises(
+        self, consumer: KafkaConsumer, path_is_forbidden: Path,
+    ):
+        """Тестирует что директория была создана."""
+        with pytest.raises(OSError):
+            consumer._init_storage_path()
 
 
 class TestGetFilePath:
@@ -70,3 +89,24 @@ class TestGetFilePath:
         assert file_storage_path in file_path_before
         assert file_storage_path in file_path_after
         assert file_path_before != file_path_after
+
+
+class TestStartStop:
+    """Тестирует методы start и stop."""
+
+    @pytest.fixture
+    def consumer_mock(self, consumer: KafkaConsumer):
+        """Мок методов start и стоп у клиента AIOKafkaConsumer."""
+        consumer.consumer.start = AsyncMock()
+        consumer.consumer.stop = AsyncMock()
+        return consumer
+
+    @pytest.mark.asyncio
+    @pytest.mark.anyio
+    async def test_start_stop(self, consumer_mock: KafkaConsumer):
+        """Тестирует что методы выполняются."""
+        await consumer_mock.start()
+        await consumer_mock.stop()
+
+        consumer_mock.consumer.start.assert_awaited_once()
+        consumer_mock.consumer.stop.assert_awaited_once()
