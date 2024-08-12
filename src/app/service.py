@@ -12,7 +12,8 @@ from app.system.runner import AsyncMultiProccessRunner
 logger = logging.getLogger(__name__)
 
 
-def _init_kafka() -> KafkaConsumer:
+def init_kafka() -> KafkaConsumer:
+    """Инициализирует KafkaConsumer."""
     logger.info('Starting up storage...')
     storage = InMemoryStorage()
     logger.info('Starting up service...')
@@ -26,7 +27,7 @@ def _init_kafka() -> KafkaConsumer:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Метод для lifespan events приложения."""
-    kafka = _init_kafka()
+    kafka = init_kafka()
     await kafka.start()
     await kafka.consume()
     yield
