@@ -24,7 +24,7 @@ coverage-conditional-plugin = "*"
 pytest-cov = "*"
 pytest-asyncio = "*"
 anyio = { version = "^4.4.0", extras = ["trio"] }
-
+types-PyYAML = "^6.0.12.20240808"
 
 [build-system]
 requires = ["poetry-core"]
