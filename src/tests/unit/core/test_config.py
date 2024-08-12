@@ -62,9 +62,13 @@ class TestKafkaSettings:
     def test_init(self, input_values: dict):
         """Тестирует инициализацию класса."""
         settings = KafkaSettings(**input_values)
+        expected_host = input_values[Key.host]
+        expected_port = input_values[Key.port]
+        expected_instance = f'{expected_host}:{expected_port}'
 
-        assert settings.host == input_values[Key.host]
-        assert settings.port == input_values[Key.port]
+        assert settings.host == expected_host
+        assert settings.port == expected_port
+        assert settings.instance == expected_instance
 
 
 class TestSettings:
