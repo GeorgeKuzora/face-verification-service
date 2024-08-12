@@ -30,7 +30,7 @@ class KafkaConsumer:
         """Функция для обработки сообщений kafka."""
         while True:  # noqa: WPS457 kafka running
             async for msg in self.consumer:
-                message: dict[str, str] = msg.value  # type: ignore
+                message: dict[str, str] = msg.value
                 username = message.get('username', '')
                 img_path = message.get('file_path', '')
                 await self.service.verify(username=username, img_path=img_path)
@@ -52,7 +52,7 @@ class KafkaConsumer:
         :return: Десериализованное сообщение.
         :rtype: dict[str, str]
         """
-        return json.loads(serialized)
+        return json.loads(serialized)  # type: ignore
 
     def _init_storage_path(self) -> None:
         path = Path(get_settings().kafka.storage_path)

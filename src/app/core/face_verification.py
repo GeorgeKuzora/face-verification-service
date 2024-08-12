@@ -2,7 +2,7 @@ import asyncio
 import logging
 from enum import StrEnum
 from pathlib import Path
-from typing import Any, Protocol, Callable
+from typing import Any, Callable, Protocol
 
 from deepface import DeepFace
 
@@ -15,7 +15,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 class Runner(Protocol):
     """Класс запуска фукций в различных режимах."""
 
-    async def run(self, func: Callable, **kwargs) -> Any:
+    async def run(self, func: Callable[[str, str], Any], **kwargs) -> Any:
         """
         Метод запуска функции.
 
@@ -99,7 +99,7 @@ class Validator:
         return model_name.value in model_name_values
 
 
-def _represent(img_path: str, model_name: str) -> list[dict[str, Any]]:
+def _represent(img_path: str, model_name: str) -> Any:
     return DeepFace.represent(
         img_path=img_path,
         model_name=model_name,
@@ -157,13 +157,13 @@ class FaceVerificationService:
             self.update_user(vector, username),
         )
         try:
-            asyncio.gather(delete_task, update_user_task)
+            await asyncio.gather(delete_task, update_user_task)
         except Exception:
             logger.error(f"can't update {username}")
 
     async def represent(
         self, img_path: str | Path, model_name: str = ModelName.facenet,
-    ) -> list[dict[str, Any]]:
+    ) -> Any:
         """
         Служит для получения представления изображения в виде списка векторов.
 
