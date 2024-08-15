@@ -225,8 +225,8 @@ class TestUpdateUser:
         'stub_user', [
             pytest.param(
                 User(
-                    representation=vector,
                     username=username,
+                    is_verified=False,
                 ),
                 id='valid user from storage',
             ),
