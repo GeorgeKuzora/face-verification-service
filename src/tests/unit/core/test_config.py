@@ -4,7 +4,12 @@ from enum import StrEnum
 import pytest
 from pydantic import ValidationError
 
-from app.core.config import KafkaSettings, Settings, get_settings
+from app.core.config import (
+    KafkaSettings,
+    PostgresSettings,
+    Settings,
+    get_settings,
+)
 from app.core.errors import ConfigError
 
 
@@ -18,6 +23,10 @@ class Key(StrEnum):
     storage_path = 'storage_path'
     topics = 'topics'
     kafka = 'kafka'
+    postgres = 'postgres'
+    pg_dns = 'pg_dns'
+    pool_size = 'pool_size'
+    max_overflow = 'max_overflow'
 
 
 kafka_valid_input = {
@@ -37,8 +46,29 @@ kafka_invalid_input = {
     Key.topics: 'faces',
 }
 
-valid_input = {Key.kafka: kafka_valid_input}
-invalid_input = {Key.kafka: kafka_invalid_input}
+postgres_valid_input = {
+    Key.pg_dns: 'postgresql+psycopg2://myuser:mysecretpassword@db:5432/mydatabase',  # noqa: E501
+    Key.pool_size: 10,
+    Key.max_overflow: 20,
+}
+postgres_invalid_input = {
+    Key.pg_dns: 'invalid_dns',  # noqa: E501
+    Key.pool_size: 10,
+    Key.max_overflow: 20,
+}
+
+valid_input = {
+    Key.kafka: kafka_valid_input,
+    Key.postgres: postgres_valid_input,
+}
+invalid_input_kafka = {
+    Key.kafka: kafka_invalid_input,
+    Key.postgres: postgres_valid_input,
+}
+invalid_input_postgres = {
+    Key.kafka: kafka_valid_input,
+    Key.postgres: postgres_invalid_input,
+}
 valid_config_path = 'src/config/config-local.yml'
 invalid_config_path = 'src/config/invalid_path.yml'
 
@@ -71,6 +101,30 @@ class TestKafkaSettings:
         assert settings.instance == expected_instance
 
 
+class TestPostgresSettings:
+    """Тестирует класс KafkaSettings."""
+
+    @pytest.mark.parametrize(
+        'input_values', (
+            pytest.param(
+                postgres_valid_input,
+                id='valid input parameters',
+            ),
+            pytest.param(
+                postgres_invalid_input,
+                id='invalid input parameters',
+                marks=pytest.mark.xfail(raises=ValidationError),
+            ),
+        ),
+    )
+    def test_init(self, input_values: dict):
+        """Тестирует инициализацию класса."""
+        settings = PostgresSettings(**input_values)
+        expected_pg_dns = input_values[Key.pg_dns]
+
+        assert str(settings.pg_dns) == str(expected_pg_dns)
+
+
 class TestSettings:
     """Тестирует класс Settings."""
 
@@ -81,8 +135,13 @@ class TestSettings:
                 id='valid input parameters',
             ),
             pytest.param(
-                invalid_input,
-                id='invalid input parameters',
+                invalid_input_kafka,
+                id='invalid input parameters for kafka',
+                marks=pytest.mark.xfail(raises=ValidationError),
+            ),
+            pytest.param(
+                invalid_input_postgres,
+                id='invalid input parameters for postgres',
                 marks=pytest.mark.xfail(raises=ValidationError),
             ),
         ),
@@ -93,6 +152,10 @@ class TestSettings:
 
         assert settings.kafka.host == input_values[Key.kafka][Key.host]  # type: ignore  # noqa: E501
         assert settings.kafka.port == input_values[Key.kafka][Key.port]  # type: ignore  # noqa: E501
+        assert (
+            str(settings.postgres.pg_dns) ==
+            str(input_values[Key.postgres][Key.pg_dns])  # type: ignore
+        )
 
     @pytest.mark.parametrize(
         'config_path', (
