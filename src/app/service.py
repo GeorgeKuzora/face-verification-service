@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from app.api.handlers import router
 from app.core.face_verification import FaceVerificationService
-from app.external.in_memory_storage import InMemoryStorage
+from app.external.postgres.storage import DBStorage
 from app.external.kafka import KafkaConsumer
 from app.system.runner import AsyncMultiProccessRunner
 
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def init_kafka() -> KafkaConsumer:
     """Инициализирует KafkaConsumer."""
     logger.info('Starting up storage...')
-    storage = InMemoryStorage()
+    storage = DBStorage()
     logger.info('Starting up service...')
     runner = AsyncMultiProccessRunner()
     logger.info('Starting up kafka consumer...')
