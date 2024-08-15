@@ -5,8 +5,8 @@ from fastapi import FastAPI
 
 from app.api.handlers import router
 from app.core.face_verification import FaceVerificationService
-from app.external.postgres.storage import DBStorage
 from app.external.kafka import KafkaConsumer
+from app.external.postgres.storage import DBStorage
 from app.system.runner import AsyncMultiProccessRunner
 
 logger = logging.getLogger(__name__)
