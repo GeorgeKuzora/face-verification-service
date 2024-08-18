@@ -11,10 +11,10 @@
 - Для Windows: рекомендуется использовать [WSL](https://virgo.ftc.ru/pages/viewpage.action?pageId=1084887269).
 - Установить Docker Desktop для MacOS/Windows или просто docker для Linux. [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 - Установить [Visual Studio Code](https://code.visualstudio.com/download).
--  [Настроить Visual Studio Code и Docker для использования Devcontainers](https://code.visualstudio.com/docs/devcontainers/containers#_getting-started).
-  - Необходимые плагины VS Code:
-    - `ms-vscode-remote.remote-containers`
-    - `ms-azuretools.vscode-docker`
+- [Настроить Visual Studio Code и Docker для использования Devcontainers](https://code.visualstudio.com/docs/devcontainers/containers#_getting-started).
+- Необходимые плагины VS Code:
+  - `ms-vscode-remote.remote-containers`
+  - `ms-azuretools.vscode-docker`
 - Установить Git
 - Установить OpenSSH с SSH Agent.
 - [Настроить Git и SSH для работы в Devcontainer](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)
@@ -33,16 +33,19 @@
 Если какие-то из дальнейших пунктов у вас уже выполнены, смело пропускайте шаг.
 
 После установки необходимого ПО:
+
 - Сгенерируйте SSH ключ и добавьте его в свой MosHub аккаунт
 - Настройте `user.name` и `user.email` для Git
 - [Настройте SSH Agent c вашим ключом](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)
 - Склонируйте текущий репозиторий в локальную директорию, если еще не сделали этого
 
 Для настройки kubernetes:
+
 - Сгенерируйте ключи для kubectl и положите их в папку `~/.kube`
 - Настройте kubectl на использование ключей из папки `~/.kube`
 
 После настройки локального окружения:
+
 - Откройте директорию в Visual Studio Code
 - Нажмите `Ctrl+Shift+P` или `Cmd+Shift+P`
 - Введите `Dev Containers:`
@@ -55,11 +58,11 @@
 
 #### Преднастроенная конфигурация для запуска линтера
 
-  Доступ из командной панели:
+Доступ из командной панели:
 
-  - Нажмите `Ctrl+Shift+P` или `Cmd+Shift+P`
-  - Выберете `Tasks: Run Task`
-  - Выберете `Flake8` или `ISort`
+- Нажмите `Ctrl+Shift+P` или `Cmd+Shift+P`
+- Выберете `Tasks: Run Task`
+- Выберете `Flake8` или `ISort`
 
 #### Преднастроенная конфигурация для запуска тестов
 
@@ -67,7 +70,7 @@
 
 #### Преднастроенная конфигурация для запуска сервиса
 
-  Смотрите по кнопке `Run and Debug` в боковой панели Visual Studio Code.
+Смотрите по кнопке `Run and Debug` в боковой панели Visual Studio Code.
 
 - `Zsh` с Oh-My-Zsh в качестве shell по-умолчанию
 - базовые консольные инструменты вроде `git`, `curl` и прочие
