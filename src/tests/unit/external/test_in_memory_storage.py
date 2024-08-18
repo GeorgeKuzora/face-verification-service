@@ -131,12 +131,13 @@ class TestUpdateUser:
         repository, _ = request.getfixturevalue(
             repository_state_factory,
         )
+        representation = [{'233': 233}]
 
-        respose_user: User = repository.update_user(
-            user.representation, user.username,
+        response_user: User = repository.update_user(
+            representation, user.username,
         )
 
-        if respose_user is None:
+        if response_user is None:
             raise AssertionError
-        assert respose_user.representation == expected_user.representation
-        assert respose_user.user_id == expected_id
+        assert response_user.user_id == expected_id
+        assert response_user.is_verified is True

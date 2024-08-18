@@ -133,50 +133,6 @@ class TestRepresent:
             raise_value_error,
         )
 
-    def test_get_representation(
-        self, valid_tmp_file, mock_deep_face_represent, service,
-    ):
-        """
-        Тестирует метод FaceVerificationService._get_representation.
-
-        Ожидается что метод вернет значение возвращенное пропатченым
-        методом DeepFace.represent.
-
-        :param valid_tmp_file: фикстура правильного файла
-        :param mock_deep_face_represent: фикстура для мока метода represent
-        :param service: Объект сервиса
-        :type service: FaceVerificationService
-        """
-        file_path = str(valid_tmp_file)
-        assert service._get_representation(  # noqa: WPS437
-            file_path, ModelName.facenet,
-        ) == self.mock_deepface_representation
-
-    async def test_get_representation_raises(
-        self,
-        valid_tmp_file,
-        mock_deep_face_represent_raises,
-        service,
-    ):
-        """
-        Тестирует метод FaceVerificationService._get_representation.
-
-        Ожидается что метод вызовет ValueError если пропатченый
-        метод DeepFace.represent вызывает исключение ValueError.
-
-        :param valid_tmp_file: фикстура правильного файла
-        :param mock_deep_face_represent_raises: фикстура для мока
-            метода represent
-        :param service: Объект сервиса
-        :type service: FaceVerificationService
-        """
-        file_path = str(valid_tmp_file)
-
-        with pytest.raises(expected_exception=ValueError):
-            service._get_representation(
-                file_path, ModelName.facenet,
-            )
-
     @pytest.mark.asyncio
     @pytest.mark.parametrize(
         'path, model_name, expected',
@@ -215,9 +171,8 @@ class TestRepresent:
         path,
         model_name,
         expected,
-        mock_deep_face_represent,
         request,
-        service,
+        service: FaceVerificationService,
     ):
         """
         Тестирует метод FaceVerificationService.represent.
@@ -225,12 +180,12 @@ class TestRepresent:
         :param path: путь к файлу изображения
         :param model_name: имя модели
         :param expected: ожидаемое значение
-        :param mock_deep_face_represent: фикстура для мока метода represent
         :param request: служебный параметр запроса
         :param service: Объект сервиса
         :type service: FaceVerificationService
         """
         path = request.getfixturevalue(path)
+        service.runner.run.return_value = expected
 
         vector = await service.represent(path, model_name)
 
@@ -240,7 +195,6 @@ class TestRepresent:
     async def test_represent_raises_on_library_error(
         self,
         valid_tmp_file,
-        mock_deep_face_represent_raises,
         service,
     ):
         """
@@ -250,11 +204,10 @@ class TestRepresent:
         метод DeepFace.represent вызывает исключение ValueError.
 
         :param valid_tmp_file: фикстура правильного файла
-        :param mock_deep_face_represent_raises: фикстура для мока
-            метода represent
         :param service: Объект сервиса
         :type service: FaceVerificationService
         """
+        service.runner.run.side_effect = ValueError
         with pytest.raises(ValueError):
             await service.represent(
                 valid_tmp_file, ModelName.facenet,
@@ -272,8 +225,8 @@ class TestUpdateUser:
         'stub_user', [
             pytest.param(
                 User(
-                    representation=vector,
                     username=username,
+                    is_verified=False,
                 ),
                 id='valid user from storage',
             ),

@@ -11,10 +11,10 @@
 - Для Windows: рекомендуется использовать [WSL](https://virgo.ftc.ru/pages/viewpage.action?pageId=1084887269).
 - Установить Docker Desktop для MacOS/Windows или просто docker для Linux. [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 - Установить [Visual Studio Code](https://code.visualstudio.com/download).
--  [Настроить Visual Studio Code и Docker для использования Devcontainers](https://code.visualstudio.com/docs/devcontainers/containers#_getting-started).
-  - Необходимые плагины VS Code:
-    - `ms-vscode-remote.remote-containers`
-    - `ms-azuretools.vscode-docker`
+- [Настроить Visual Studio Code и Docker для использования Devcontainers](https://code.visualstudio.com/docs/devcontainers/containers#_getting-started).
+- Необходимые плагины VS Code:
+  - `ms-vscode-remote.remote-containers`
+  - `ms-azuretools.vscode-docker`
 - Установить Git
 - Установить OpenSSH с SSH Agent.
 - [Настроить Git и SSH для работы в Devcontainer](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)
@@ -33,16 +33,19 @@
 Если какие-то из дальнейших пунктов у вас уже выполнены, смело пропускайте шаг.
 
 После установки необходимого ПО:
+
 - Сгенерируйте SSH ключ и добавьте его в свой MosHub аккаунт
 - Настройте `user.name` и `user.email` для Git
 - [Настройте SSH Agent c вашим ключом](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)
 - Склонируйте текущий репозиторий в локальную директорию, если еще не сделали этого
 
 Для настройки kubernetes:
+
 - Сгенерируйте ключи для kubectl и положите их в папку `~/.kube`
 - Настройте kubectl на использование ключей из папки `~/.kube`
 
 После настройки локального окружения:
+
 - Откройте директорию в Visual Studio Code
 - Нажмите `Ctrl+Shift+P` или `Cmd+Shift+P`
 - Введите `Dev Containers:`
@@ -55,11 +58,11 @@
 
 #### Преднастроенная конфигурация для запуска линтера
 
-  Доступ из командной панели:
+Доступ из командной панели:
 
-  - Нажмите `Ctrl+Shift+P` или `Cmd+Shift+P`
-  - Выберете `Tasks: Run Task`
-  - Выберете `Flake8` или `ISort`
+- Нажмите `Ctrl+Shift+P` или `Cmd+Shift+P`
+- Выберете `Tasks: Run Task`
+- Выберете `Flake8` или `ISort`
 
 #### Преднастроенная конфигурация для запуска тестов
 
@@ -67,13 +70,57 @@
 
 #### Преднастроенная конфигурация для запуска сервиса
 
-  Смотрите по кнопке `Run and Debug` в боковой панели Visual Studio Code.
+Смотрите по кнопке `Run and Debug` в боковой панели Visual Studio Code.
 
 - `Zsh` с Oh-My-Zsh в качестве shell по-умолчанию
 - базовые консольные инструменты вроде `git`, `curl` и прочие
 - `kubectl` и `helm` для работы с kubernetes
 - `python` версии 3.12 с `poetry` для управления зависимостями и виртуальным окружением
 - настроен доступ до `docker` на хосте
+
+### Работа с базой данных при работе в Devcontainer
+
+#### Сервис db
+
+Для работы с базой данных при работе в devcontainer при разработке и тестировании приложения, в docker-compose devcontainer добавлен сервис `db`.
+
+Сервис `db` запускается совместно с devcontainer и доступен по dns-имени `db` на порту `5432`.
+
+Данные авторизации сервиса `db` соответстуют данным размещенным в файле конфигурации `config-local.yml` и могут использоваться при локальной разработке, но не должны использоваться в продакшене.
+
+#### Миграция базы данных
+
+При начале работы с проектом. Или после изменений схемы базы данных в проекте необходимо выполнить миграцию базы данных. Миграция базы данных производится при помощи инструмента для управления миграциями `alembic`. `alembic` добавлен в зависимости проекта и устанавливается при старте dev-контейнера.
+
+Для выполения миграции базы данных необходимо убедиться, что совместно с dev-контейнером запущен сервис `db`. Для этого можно восполльзоваться командой:
+
+```shell
+docker container list
+```
+
+В выводе команды должнет быть работающий контейнер с сервисом `db`:
+
+```
+18bbf11d123a postgres:16.3 "docker-entrypoint.s…" 16 hours ago Up 16 hours 0.0.0.0:5432->5432/tcp, :::5432->5432/tcp face-verification-service_devcontainer-db-1
+```
+
+Затем неободимо применить существующие миграции проекта к базе данных. Для этого нужно выполнить команду:
+
+```shell
+alembic upgrade head
+```
+
+Если при выполнении команды не возникло ошибок, то база данных будет готова к работе.
+
+#### Создание миграций
+
+Если при работе над проектом вносятся изменения в схему базы данных. То эти именения нужно добавить в файлы миграции alembic. Для этого следует воспользоваться следующей командой:
+
+```shell
+alembic revision --autogenerate -m "<Описание миграции>"
+```
+
+При этом `alembic` создат новый файл миграции в директории `alembic/versions/` где будут отражены изменения схеме базы данных если они были внесены через `sqlalchemy.orm`.
 
 ## Структура проекта
 

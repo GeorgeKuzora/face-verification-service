@@ -15,5 +15,6 @@ class User(BaseModel):
     """Пользователь."""
 
     username: str
-    representation: list[dict[str, Any]]
+    is_verified: bool
+    vector: list[dict[str, Any]] | None = None
     user_id: int | None = None

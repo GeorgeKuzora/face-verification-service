@@ -1,7 +1,7 @@
 import os
 import random
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -9,11 +9,11 @@ from app.core.face_verification import FaceVerificationService, Validator
 from app.core.models import User
 from app.external.in_memory_storage import InMemoryStorage
 
-test_user = User(username='george', representation=[{'233': 233}])
-invalid_user = User(username='invalid', representation=[{'0': 0}])
+test_user = User(username='george', is_verified=False)
+invalid_user = User(username='invalid', is_verified=False)
 user_list2objects = [
-    User(username='george', representation=[{'233': 233}]),
-    User(username='peter', representation=[{'234': 234}]),
+    User(username='george', is_verified=False),
+    User(username='peter', is_verified=False),
 ]
 
 
@@ -46,7 +46,8 @@ def service():
     :rtype: AuthService
     """
     storage = MagicMock()
-    return FaceVerificationService(storage=storage)
+    runner = AsyncMock()
+    return FaceVerificationService(storage=storage, runner=runner)
 
 
 @pytest.fixture

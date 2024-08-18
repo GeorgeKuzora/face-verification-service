@@ -43,7 +43,8 @@ class InMemoryStorage:
         """
         user = User(
             username=username,
-            representation=vector,
+            is_verified=True,
+            vector=vector,
         )
         user_in_db = self.get_user(user)
 
@@ -74,7 +75,7 @@ class InMemoryStorage:
         """
         indexed_user = User(
             username=user.username,
-            representation=user.representation,
+            is_verified=True,
             user_id=self.users_count,
         )
         self.users.append(indexed_user)
