@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Table
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, PickleType
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 username_max_len = 200
@@ -27,6 +27,7 @@ class User(Base):
         back_populates='user',
     )
     reports: Mapped[List['Report']] = relationship(back_populates='user')
+    vector: Mapped[bytes] = mapped_column(nullable=True)
 
 
 class Transaction(Base):
