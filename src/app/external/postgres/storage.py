@@ -1,4 +1,5 @@
 import logging
+import pickle  # noqa: S403 considered
 from typing import Any
 
 from sqlalchemy import Engine, create_engine, select
@@ -55,8 +56,9 @@ class DBStorage:
                 logger.error(f'{username} not found')
                 return None
             user.is_verified = True
+            user.vector = self._pickle_vector(vector)
             logger.info(f'{username}.is_verified set to True')
-            srv_user = self._get_srv_user(user)
+            srv_user = self._get_srv_user(user, vector)
             session.commit()
         return srv_user
 
@@ -65,9 +67,15 @@ class DBStorage:
             select(db.User).where(db.User.username == username),
         ).first()
 
-    def _get_srv_user(self, db_user: db.User) -> srv.User:
+    def _get_srv_user(
+        self, db_user: db.User, vector: list[dict[str, Any]] | None = None,  # noqa: WPS221, E501
+    ) -> srv.User:
         return srv.User(
             username=db_user.username,
             is_verified=db_user.is_verified,
             user_id=db_user.id,
+            vector=vector,
         )
+
+    def _pickle_vector(self, vector: list[dict[str, Any]]) -> bytes:
+        return pickle.dumps(vector)

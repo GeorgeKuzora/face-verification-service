@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -15,4 +16,5 @@ class User(BaseModel):
 
     username: str
     is_verified: bool
+    vector: list[dict[str, Any]] | None = None
     user_id: int | None = None

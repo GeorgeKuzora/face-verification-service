@@ -44,6 +44,7 @@ class InMemoryStorage:
         user = User(
             username=username,
             is_verified=True,
+            vector=vector,
         )
         user_in_db = self.get_user(user)
 
