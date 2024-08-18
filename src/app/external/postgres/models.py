@@ -18,7 +18,7 @@ class User(Base):
     __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(username_max_len))
+    username: Mapped[str] = mapped_column(String(username_max_len), unique=True)
     hashed_password: Mapped[str] = mapped_column(String(hash_max_len))
     balance: Mapped[int] = mapped_column(default=0)
     is_verified: Mapped[bool] = mapped_column(default=False)
