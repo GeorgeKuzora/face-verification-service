@@ -5,7 +5,7 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLables:
+    matchLabels:
       app: kuzora-face-verification
   template:
     metadata:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: kuzora-face-verification
-          image: ...
+          image: gkuzora/face-verification-service:latest
           resourses:
             limits:
               memory: "200Mi"
