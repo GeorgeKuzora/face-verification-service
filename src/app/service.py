@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.api.handlers import router
+from app.api.healthz.handlers import router as healthz_router
 from app.core.face_verification import FaceVerificationService
 from app.external.kafka import KafkaConsumer
 from app.external.postgres.storage import DBStorage
@@ -37,6 +38,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(router=router)
+app.include_router(router=healthz_router)
 
 
 if __name__ == '__main__':

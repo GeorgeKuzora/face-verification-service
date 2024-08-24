@@ -30,7 +30,7 @@ class KafkaConsumer:
         """Функция для обработки сообщений kafka."""
         while True:  # noqa: WPS457 kafka running
             async for msg in self.consumer:
-                message: dict[str, str] = msg.value
+                message: dict[str, str] = msg.value  # type: ignore
                 username = message.get('username', '')
                 img_path = message.get('file_path', '')
                 await self.service.verify(username=username, img_path=img_path)
