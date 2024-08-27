@@ -1,0 +1,84 @@
+replicaCount: 1
+
+image:
+  repository: gkuzora/face-verification-service
+  tag: latest
+
+selectorLabels:
+  app: kuzora-face-verification
+
+configMap:
+  data:
+    config_path: /app/src/config/config-kube.yml
+    pythonpath: /app/src
+    alembic_config: /app/alembic_kube.ini
+
+job:
+  name: kuzora-database-migrate
+  restartPolicy: Never
+  backoffLimit: 4
+  activeDeadlineSeconds: 120
+  command: ["poetry", "run", "alembic", "upgrade", "head"]
+
+service:
+  type: ClusterIP
+  port: 8081
+  targetPort: 8081
+
+pvc:
+  name: kuzora-vectors-pvc
+  spec:
+  storageClassName: yc-network-hdd
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  storage: 1Gi
+
+autoscaling:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+environment:
+  - name: CONFIG_PATH
+    valueFrom:
+      configMapKeyRef:
+        name: kuzora-face-verification-configmap
+        key: config_path
+  - name: PYTHONPATH
+    valueFrom:
+      configMapKeyRef:
+        name: kuzora-face-verification-configmap
+        key: pythonpath
+  - name: ALEMBIC_CONFIG
+    valueFrom:
+      configMapKeyRef:
+        name: kuzora-face-verification-configmap
+        key: alembic_config
+
+livenessProbe:
+  failureThreshold: 5
+  httpGet:
+    path: /healthz/up
+    port: 8081
+  initialDelaySeconds: 3
+  periodSeconds: 2
+readinessProbe:
+  failureThreshold: 5
+  httpGet:
+    path: /healthz/ready
+    port: 8081
+  initialDelaySeconds: 60
+  periodSeconds: 2
+  successThreshold: 2
+
+volumes:
+  name: vector-volume
+  mountPath: "/var/www/face_verification/vectors"
+
