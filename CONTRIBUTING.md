@@ -169,3 +169,23 @@ docker run --name face-verification -p 127.0.0.1:8081:8000 face-verification
 ```
 
 Приложение будет доступно на порту `127.0.0.1:8081`.
+
+## Запуск приложения в kubernetes
+
+Для работы приложения в kubernetes созданы манифесты ресурсов kubernetes - `manifests`.
+
+Для того чтобы запустить необходимые ресурсы в кластере kubernetes выполните следующие команды:
+
+```shell
+kubectl apply -f manifests/pvc.yml
+kubectl apply -f manifests/configMap.yml
+kubectl apply -f manifests/serivce.yml
+kubectl apply -f manifests/deployment.yml
+kubectl apply -f manifests/job.yml
+```
+
+Для упрощения работы с манифестами kubernetes создан пакет шаблонов helm. Для установки приложения в kubernetes при помощи helm выполните команду:
+
+```shell
+helm install kuzora-face-verification ./kuzora-face-verification
+```

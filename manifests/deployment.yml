@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuzora-face-verification-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kuzora-face-verification
+  template:
+    metadata:
+      labels:
+        app: kuzora-face-verification
+    spec:
+      containers:
+        - name: kuzora-face-verification
+          image: gkuzora/face-verification-service:latest
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "100m"
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: 8080
+            failureThreshold: 5
+            initialDelaySeconds: 300
+            periodSeconds: 2
+            successThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /healthz/up
+              port: 8080
+            failureThreshold: 10
+            initialDelaySeconds: 3
+            periodSeconds: 2
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+          - mountPath: "/var/www/face_verification/kuzora/vectors"
+            name: vector-volume
+          env:
+            - name: CONFIG_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: kuzora-face-verification-configmap
+                  key: config_path
+            - name: PYTHONPATH
+              valueFrom:
+                configMapKeyRef:
+                  name: kuzora-face-verification-configmap
+                  key: pythonpath
+      volumes:
+        - name: vector-volume
+          persistentVolumeClaim:
+            claimName: kuzora-vectors-pvc
