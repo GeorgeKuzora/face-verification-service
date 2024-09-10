@@ -79,7 +79,7 @@ def service(storage, runner):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    'path, model_name, vector_min_lenght',
+    'path, model_name, vector_min_length',
     (
         pytest.param(
             'tmp_file_valid',

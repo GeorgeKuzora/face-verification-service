@@ -79,7 +79,7 @@ class TestGetUser:
         'invalid_user, repository_state_factory, expected', (
             pytest.param(
                 invalid_user,
-                'two_users_in_repo_facrory',
+                'two_users_in_repo_factory',
                 None,
                 id='second user in repo',
             ),
