@@ -15,7 +15,12 @@ class KafkaConsumer:
     """Очередь сообщений кафка."""
 
     def __init__(self, service: FaceVerificationService) -> None:
-        """Метод инициализации."""
+        """
+        Метод инициализации.
+
+        :param service: Сервис верификации изображения.
+        :type service: FaceVerificationService
+        """
         self.service = service
 
         self.consumer = AIOKafkaConsumer(
