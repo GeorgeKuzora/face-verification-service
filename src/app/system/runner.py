@@ -4,7 +4,7 @@ from functools import partial
 from typing import Any, Callable
 
 
-class AsyncMultiProccessRunner:
+class AsyncMultiProcessRunner:
     """Раннер для запуска а асинхронной функции в новом процессе."""
 
     async def run(self, func: Callable[[str, str], Any], **kwargs) -> Any:

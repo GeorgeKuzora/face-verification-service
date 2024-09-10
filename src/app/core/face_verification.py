@@ -13,7 +13,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 class Runner(Protocol):
-    """Класс запуска фукций в различных режимах."""
+    """Класс запуска функций в различных режимах."""
 
     async def run(self, func: Callable[[str, str], Any], **kwargs) -> Any:
         """
@@ -21,7 +21,7 @@ class Runner(Protocol):
 
         :param func: Запускаемая функция
         :type func: Callable
-        :param kwargs: Атрибуты функциив форме ключ-значение
+        :param kwargs: Атрибуты функции в форме ключ-значение
         :type kwargs: key-value pairs
         """
         ...  # noqa: WPS428 default Protocol syntax
@@ -51,7 +51,7 @@ class Storage(Protocol):
 
 class ModelName(StrEnum):
     """
-    Названия подерживаемых моделей распознавания лиц.
+    Названия поддерживаемых моделей распознавания лиц.
 
     Attributes:
         attribute_name: type and description.
@@ -72,8 +72,8 @@ class Validator:
         :raises ValueError: При ошибке доступа к файлу
         """
         if not self._is_path(path):
-            logger.error(f"file {path} doesn\'t extist")
-            raise ValueError(f"file {path} doesn\'t extist")
+            logger.error(f"file {path} doesn\'t exist")
+            raise ValueError(f"file {path} doesn\'t exist")
 
     def validate_model_name(self, model_name: ModelName | str) -> None:
         """
@@ -198,7 +198,7 @@ class FaceVerificationService:
         user: User | None = self.storage.update_user(vector, username)
         if not user:
             logger.error('StorageError: user is not updated')
-            raise StorageError(detail='error in stotage user is not updated')
+            raise StorageError(detail='error in storage, user is not updated')
 
     async def _delete_path(self, img_path: str) -> None:
         path = Path(img_path)

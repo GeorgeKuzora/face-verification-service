@@ -47,13 +47,13 @@ class TestGetUser:
         'user, repository_state_factory, expected_user', (
             pytest.param(
                 user_list2objects[0],
-                'single_user_in_repo_facrory',
+                'single_user_in_repo_factory',
                 user_list2objects[0],
                 id='first user in repo',
             ),
             pytest.param(
                 user_list2objects[1],
-                'two_users_in_repo_facrory',
+                'two_users_in_repo_factory',
                 user_list2objects[1],
                 id='second user in repo',
             ),
@@ -62,18 +62,18 @@ class TestGetUser:
     def test_get_user(
         self, user: User, repository_state_factory, expected_user, request,
     ):
-        """Тетстирует получение пользователя."""
+        """Тестирует получение пользователя."""
         repository, users_in_db = request.getfixturevalue(
             repository_state_factory,
         )
         expected_user_id = users_in_db - 1
 
-        respose_user: User | None = repository.get_user(user)
+        response_user: User | None = repository.get_user(user)
 
-        if respose_user is None:
+        if response_user is None:
             raise AssertionError
-        assert respose_user.username == expected_user.username
-        assert respose_user.user_id == expected_user_id
+        assert response_user.username == expected_user.username
+        assert response_user.user_id == expected_user_id
 
     @pytest.mark.parametrize(
         'invalid_user, repository_state_factory, expected', (
@@ -93,9 +93,9 @@ class TestGetUser:
             repository_state_factory,
         )
 
-        respose_user: User | None = repository.get_user(invalid_user)
+        response_user: User | None = repository.get_user(invalid_user)
 
-        assert respose_user == expected
+        assert response_user == expected
 
 
 class TestUpdateUser:
@@ -105,21 +105,21 @@ class TestUpdateUser:
         'user, repository_state_factory, expected_user, expected_id', (
             pytest.param(
                 user_list2objects[0],
-                'single_user_in_repo_facrory',
+                'single_user_in_repo_factory',
                 user_list2objects[0],
                 0,
                 id='user found and updated',
             ),
             pytest.param(
                 user_list2objects[1],
-                'single_user_in_repo_facrory',
+                'single_user_in_repo_factory',
                 user_list2objects[1],
                 1,
                 id='user not found and created',
             ),
         ),
     )
-    def test_update_user(  # noqa: WPS211 neede these arguments
+    def test_update_user(  # noqa: WPS211 need these arguments
         self,
         user: User,
         repository_state_factory,
@@ -127,7 +127,7 @@ class TestUpdateUser:
         expected_id,
         request,
     ):
-        """Тетстирует обновление пользователя."""
+        """Тестирует обновление пользователя."""
         repository, _ = request.getfixturevalue(
             repository_state_factory,
         )

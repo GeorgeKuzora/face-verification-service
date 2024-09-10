@@ -16,7 +16,7 @@ class Fixtures(StrEnum):
 
 
 class TestPathValidation:
-    """Тестирует медоды валидации пути."""
+    """Тестирует методы валидации пути."""
 
     is_valid_path = True
     is_invalid_path = False
