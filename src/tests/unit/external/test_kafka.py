@@ -27,13 +27,13 @@ class TestDeserializer:
 
     @pytest.mark.asyncio
     async def test_deserializer(self, consumer: KafkaConsumer, serialized_data):
-        """Тестирует что данные десериализируются коректно."""
+        """Тестирует что данные десериализируются корректно."""
         deserialized_data = consumer.deserializer(serialized_data)
 
         assert deserialized_data == self.test_data
 
 
-class TestInitStaragePath:
+class TestInitStoragePath:
     """Тестирует метод _init_storage_path."""
 
     @pytest.fixture
@@ -82,7 +82,7 @@ class TestGetFilePath:
     def test_get_file_path(
         self, consumer: KafkaConsumer, file_storage_path: str,
     ):
-        """Тестрирует что file_path уникален и содержит путь к директории."""
+        """Тестирует что file_path уникален и содержит путь к директории."""
         file_path_before = consumer._get_file_path(self.test_username)
         file_path_after = consumer._get_file_path(self.test_username)
 

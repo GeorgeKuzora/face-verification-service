@@ -59,7 +59,7 @@ class InvalidModel(StrEnum):
     invalid_model = 'Invalid_model'
 
 
-test_vector_min_lenght = 1
+test_vector_min_length = 1
 
 
 @pytest.fixture
@@ -71,7 +71,7 @@ def service(storage, runner):
     :type storage: Storage
     :param runner: Раннер функции
     :type runner: Runner
-    :return: Экземляр сервиса
+    :return: Экземпляр сервиса
     :rtype: FaceVerificationService
     """
     return FaceVerificationService(storage=storage, runner=runner)
@@ -79,12 +79,12 @@ def service(storage, runner):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    'path, model_name, vector_min_lenght',
+    'path, model_name, vector_min_length',
     (
         pytest.param(
             'tmp_file_valid',
             ModelName.facenet,
-            test_vector_min_lenght,
+            test_vector_min_length,
             id='valid file, valid model',
             marks=pytest.mark.slow,
         ),
@@ -121,7 +121,7 @@ def service(storage, runner):
 async def test_represent(
     path,
     model_name,
-    vector_min_lenght,
+    vector_min_length,
     request,
     service,
 ):
@@ -129,9 +129,9 @@ async def test_represent(
     path = request.getfixturevalue(path)
 
     vector = await service.represent(path, model_name)
-    vector_lenght = len(vector)
+    vector_length = len(vector)
 
-    assert vector_lenght >= vector_min_lenght
+    assert vector_length >= vector_min_length
 
 
 class TestVerify:

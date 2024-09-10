@@ -53,7 +53,7 @@ def service():
 @pytest.fixture
 def storage():
     """
-    Хралилище данных.
+    Хранилище данных.
 
     :return: Хранилище данных
     :rtype: InMemoryStorage
@@ -62,7 +62,7 @@ def storage():
 
 
 @pytest.fixture
-def single_user_in_repo_facrory(storage):
+def single_user_in_repo_factory(storage):
     """Фикстура репозитория с одной записью о пользователе."""
     users_in_repo = 1
     storage.create_user(user_list2objects[0])
@@ -70,7 +70,7 @@ def single_user_in_repo_facrory(storage):
 
 
 @pytest.fixture
-def two_users_in_repo_facrory(storage):
+def two_users_in_repo_factory(storage):
     """Фикстура репозитория с двумя записями о пользователях."""
     users_in_repo = 2
     for user_id in range(users_in_repo):

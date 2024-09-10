@@ -8,7 +8,7 @@ from app.api.healthz.handlers_healthz import router as healthz_router
 from app.core.face_verification import FaceVerificationService
 from app.external.kafka import KafkaConsumer
 from app.external.postgres.storage import DBStorage
-from app.system.runner import AsyncMultiProccessRunner
+from app.system.runner import AsyncMultiProcessRunner
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ def init_kafka() -> KafkaConsumer:
     logger.info('Starting up storage...')
     storage = DBStorage()
     logger.info('Starting up service...')
-    runner = AsyncMultiProccessRunner()
+    runner = AsyncMultiProcessRunner()
     logger.info('Starting up kafka consumer...')
     service = FaceVerificationService(storage=storage, runner=runner)
     logger.info('Starting up runner...')

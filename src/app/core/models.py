@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 
 class Message(BaseModel):
-    """Соощение от очереди сообщений."""
+    """Сообщение от очереди сообщений."""
 
     path: Path | str
     username: str

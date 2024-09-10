@@ -1,7 +1,7 @@
 import pytest
 
 from app.external.in_memory_storage import InMemoryStorage
-from app.system.runner import AsyncMultiProccessRunner
+from app.system.runner import AsyncMultiProcessRunner
 
 
 @pytest.fixture
@@ -13,4 +13,4 @@ def storage():
 @pytest.fixture
 def runner():
     """Фикстура для создания объекта InMemoryRepository."""
-    return AsyncMultiProccessRunner()
+    return AsyncMultiProcessRunner()

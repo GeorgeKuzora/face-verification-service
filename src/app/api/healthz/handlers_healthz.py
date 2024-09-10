@@ -12,11 +12,21 @@ ready_message = {'message': 'service is ready'}
 
 @router.get('/up')
 async def up_check() -> dict[str, str]:
-    """Healthcheck для сервера сервиса."""
+    """
+    Healthcheck для сервера сервиса.
+
+    :return: Сообщение о успехе.
+    :rtype: dict[str, str]
+    """
     return up_message
 
 
 @router.get('/ready')
 async def ready_check() -> dict[str, str]:
-    """Healthcheck для зависимостей приложения."""
+    """
+    Healthcheck для зависимостей приложения.
+
+    :return: Сообщение о успехе.
+    :rtype: dict[str, str]
+    """
     return ready_message
